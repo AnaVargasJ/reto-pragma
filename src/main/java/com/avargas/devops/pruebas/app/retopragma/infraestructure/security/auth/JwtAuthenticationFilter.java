@@ -1,5 +1,8 @@
-package com.avargas.devops.pruebas.app.retopragma.infraestructure.security.jwt;
+package com.avargas.devops.pruebas.app.retopragma.infraestructure.security.auth;
 
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.commons.exceptions.NoDataFoundException;
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.security.jwt.TokenJwtConfig;
+import com.avargas.devops.pruebas.app.retopragma.model.entities.usuarios.Usuarios;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -8,6 +11,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,9 +32,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final AuthenticationManager authenticationManager;
 
     /*metodo para autenticar el usuario*/
-    public Authentication authenticateUser(User user) throws AuthenticationException {
+    public Authentication authenticateUser(Usuarios user) throws AuthenticationException {
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
+                new UsernamePasswordAuthenticationToken(user.getCorreo(), user.getClave());
         return authenticationManager.authenticate(authenticationToken);
     }
 
@@ -52,7 +56,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
             Map<String, Object> jwtoken = new HashMap<>();
             jwtoken.put("token", token);
-            jwtoken.put("correo", username);
+            jwtoken.put("mensaje", "El usuario ha iniciado sesión correctamente");
+            jwtoken.put("codigo", HttpStatus.OK.value());
             return jwtoken;
 
     }
@@ -62,10 +67,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
         try {
-            User user = new ObjectMapper().readValue(request.getInputStream(), User.class);
+            Usuarios user = new ObjectMapper().readValue(request.getInputStream(), Usuarios.class);
             return authenticateUser(user);
         } catch (IOException e) {
-            throw new RuntimeException("Error al leer las credenciales del usuario", e);
+            throw new NoDataFoundException("Error al leer las credenciales del usuario", e);
         }
     }
 

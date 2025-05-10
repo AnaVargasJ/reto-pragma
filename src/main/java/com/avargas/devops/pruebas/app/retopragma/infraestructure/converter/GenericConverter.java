@@ -1,5 +1,6 @@
 package com.avargas.devops.pruebas.app.retopragma.infraestructure.converter;
 
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.FieldIgnore;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.FieldMapping;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -23,9 +24,11 @@ public class GenericConverter  {
             for (Field entityField : entity.getClass().getDeclaredFields()) {
                 if (Modifier.isStatic(entityField.getModifiers()) ||
                         Modifier.isFinal(entityField.getModifiers()) ||
-                        Collection.class.isAssignableFrom(entityField.getType())) {
+                        Collection.class.isAssignableFrom(entityField.getType()) ||
+                        entityField.isAnnotationPresent(FieldIgnore.class)) {
                     continue;
                 }
+
                 entityField.setAccessible(true);
                 String dtoFieldName = fieldMapping.getOrDefault(entityField.getName(), entityField.getName());
 
@@ -34,30 +37,32 @@ public class GenericConverter  {
                     if (Modifier.isStatic(dtoField.getModifiers()) || Modifier.isFinal(dtoField.getModifiers())) {
                         continue;
                     }
+
                     dtoField.setAccessible(true);
                     Object value = entityField.get(entity);
 
-                    if ("fechaNacimiento".equals(entityField.getName()) && value instanceof String) {
-                        try {
-                            String fechaStr = (String) value;
-                            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.forLanguageTag("es-CO"));
-                            sdf.setLenient(false);
-                            value = sdf.parse(fechaStr);
-                        } catch (ParseException ex) {
-                            log.error("Error al parsear fecha '{}': {}", value, ex.getMessage());
-                            throw new RuntimeException("Formato de fecha inválido para el campo: " + dtoField.getName(), ex);
-                        }
+                    if ("fechaNacimiento".equals(entityField.getName()) && value instanceof Date && dtoField.getType().equals(String.class)) {
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.forLanguageTag("es-CO"));
+                        value = sdf.format((Date) value);
                     }
+
                     dtoField.set(dto, value);
+
                 } catch (NoSuchFieldException ignored) {
                     log.warn("Campo no encontrado en el DTO: " + dtoFieldName);
                 }
             }
+
             return dto;
+
         } catch (Exception e) {
-            throw new RuntimeException("Error mapping entity to DTO", e);
+            log.error("Error detallado en mapEntityToDto", e);
+            throw new RuntimeException("Error mapping entity to DTO: " + e.getMessage(), e);
         }
     }
+
+
+
 
     public static <D, E> E mapDtoToEntity(D dto, Class<E> entityClass) {
         try {

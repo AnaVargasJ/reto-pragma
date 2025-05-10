@@ -1,5 +1,6 @@
 package com.avargas.devops.pruebas.app.retopragma.model.entities.usuarios;
 
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.FieldIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
@@ -41,6 +42,7 @@ public class Usuarios implements Serializable {
     private String correo;
 
     //Oculta la clave en la respuesta del servicio
+    @FieldIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "clave", nullable = false)
     private String clave;

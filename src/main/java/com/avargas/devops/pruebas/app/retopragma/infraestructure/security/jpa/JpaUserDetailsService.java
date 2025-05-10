@@ -33,8 +33,9 @@ public class JpaUserDetailsService implements UserDetailsService {
 
         // Solo un rol por usuario, lo convertimos a lista de GrantedAuthority
         List<GrantedAuthority> authorities = List.of(
-                new SimpleGrantedAuthority(usuario.getRol().getNombre())
+                new SimpleGrantedAuthority("ROLE_" + usuario.getRol().getNombre())
         );
+
 
         return new org.springframework.security.core.userdetails.User(
                 usuario.getCorreo(),         // ← username
