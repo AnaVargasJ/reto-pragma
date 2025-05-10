@@ -11,9 +11,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -52,10 +54,10 @@ public class UsuarioController implements IUsuarioController {
                     content = @Content(schema = @Schema(implementation = Object.class))
             )
     })
-    public ResponseEntity<?> crearPropietario(@RequestBody
+    public ResponseEntity<?> crearPropietario(@Valid @RequestBody
                                               @Parameter(description = "Datos de usuario", required = true, content = @Content(schema = @Schema(implementation = UsuarioDTO.class)))
-                                              UsuarioDTO usuarioDTO) {
-        return usuarioService.crearPropietario(usuarioDTO);
+                                              UsuarioDTO usuarioDTO, BindingResult bindingResult) {
+        return usuarioService.crearPropietario(usuarioDTO, bindingResult);
     }
 
     @Override

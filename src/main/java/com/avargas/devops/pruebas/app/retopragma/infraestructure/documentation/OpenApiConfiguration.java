@@ -7,12 +7,13 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+@ConditionalOnProperty(name = "springdoc.api-docs.enabled", havingValue = "true", matchIfMissing = true)
 @Configuration
 public class OpenApiConfiguration {
-
 
     @Value("${spring.application.name}")
     private String title;
@@ -45,4 +46,5 @@ public class OpenApiConfiguration {
                         ));
 
     }
+
 }

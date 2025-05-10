@@ -15,6 +15,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -35,27 +39,31 @@ public class SecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests( (authz) -> authz
-                        .requestMatchers("/api/v1/usuarios/**").permitAll()
-                        .requestMatchers(
-                                "/swagger-ui.html",
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                "/v2/api-docs/**",
-                                "/swagger-resources/**",
-                                "/webjars/**"
-                        ).permitAll()
-                        .anyRequest().authenticated())
-                .exceptionHandling(exception -> exception
-                        .accessDeniedHandler(customAccessDeniedHandler)
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+                .cors(cors -> cors.configurationSource(request -> {
+                    CorsConfiguration config = new CorsConfiguration();
+                    config.setAllowedOrigins(List.of("*"));
+                    config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
+                    config.setAllowedHeaders(List.of("*"));
+                    return config;
+                }))
+                .authorizeHttpRequests(authz -> authz
+                        .requestMatchers("/api/v1/usuarios/**", "/api/v1/usuarios/login",
+                                "/Propietario/login",
+                                "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**",
+                                "/swagger-resources/**", "/webjars/**", "/v3/api-docs.yaml").permitAll()
+                        .anyRequest().authenticated()
                 )
-                .httpBasic(Customizer.withDefaults())
-                .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-                .addFilter(new JwtValidationFilter(authenticationManager()))
-                .csrf(config -> config.disable())
-                .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(customAccessDeniedHandler))
+                .addFilterBefore(new JwtAuthenticationFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtValidationFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
+
+
 
 }

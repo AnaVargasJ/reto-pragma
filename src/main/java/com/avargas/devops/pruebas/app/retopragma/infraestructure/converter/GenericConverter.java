@@ -40,11 +40,13 @@ public class GenericConverter  {
 
                     dtoField.setAccessible(true);
                     Object value = entityField.get(entity);
+                    log.info("Tipo exacto del campo entidad: " + entityField.getType().getName());
 
-                    if ("fechaNacimiento".equals(entityField.getName()) && value instanceof Date && dtoField.getType().equals(String.class)) {
+                    if (value instanceof Date && dtoField.getType().equals(String.class)) {
                         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.forLanguageTag("es-CO"));
                         value = sdf.format((Date) value);
                     }
+
 
                     dtoField.set(dto, value);
 
