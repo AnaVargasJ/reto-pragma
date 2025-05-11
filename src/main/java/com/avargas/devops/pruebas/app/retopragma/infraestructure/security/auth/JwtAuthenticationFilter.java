@@ -31,7 +31,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final AuthenticationManager authenticationManager;
 
-    /*metodo para autenticar el usuario*/
     public Authentication authenticateUser(Usuarios user) throws AuthenticationException {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(user.getCorreo(), user.getClave());
@@ -42,10 +41,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         User user = (User) authResult.getPrincipal();
         String username = user.getUsername();
         Collection<? extends GrantedAuthority> roles = authResult.getAuthorities();
+
         Claims claims = Jwts.claims()
                 .add("authorities", new ObjectMapper().writeValueAsString(roles))
                 .add("username", username)
                 .build();
+
         String token = Jwts.builder()
                 .subject(username)
                 .claims(claims)
@@ -54,14 +55,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .signWith(TokenJwtConfig.SECRET_KEY)
                 .compact();
 
-            Map<String, Object> jwtoken = new HashMap<>();
-            jwtoken.put("token", token);
-            jwtoken.put("mensaje", "El usuario ha iniciado sesión correctamente");
-            jwtoken.put("codigo", HttpStatus.OK.value());
-            return jwtoken;
-
+        Map<String, Object> jwtoken = new HashMap<>();
+        jwtoken.put("token", token);
+        jwtoken.put("mensaje", "El usuario ha iniciado sesión correctamente");
+        jwtoken.put("codigo", HttpStatus.OK.value());
+        return jwtoken;
     }
-
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
@@ -80,12 +79,23 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Map<String, Object> jwtoken = generateTokenResponse(authResult);
         String token = (String) jwtoken.get("token");
 
-
         response.addHeader(TokenJwtConfig.HEADER_AUTHORIZATION, TokenJwtConfig.PREFIX_TOKEN + token);
         response.getWriter().write(new ObjectMapper().writeValueAsString(jwtoken));
         response.setContentType(TokenJwtConfig.CONTENT_TYPE);
         response.setStatus(200);
     }
 
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+                                              AuthenticationException failed) throws IOException, ServletException {
+        Map<String, Object> respuesta = new HashMap<>();
+        respuesta.put("mensaje", "Credenciales inválidas");
+        respuesta.put("error", failed.getMessage());
+        respuesta.put("codigo", HttpStatus.UNAUTHORIZED.value());
+
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setContentType(TokenJwtConfig.CONTENT_TYPE);
+        response.getWriter().write(new ObjectMapper().writeValueAsString(respuesta));
+    }
 
 }

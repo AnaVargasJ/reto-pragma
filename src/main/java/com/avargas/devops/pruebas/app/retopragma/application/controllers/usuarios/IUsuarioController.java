@@ -8,7 +8,6 @@ import org.springframework.validation.BindingResult;
 public interface IUsuarioController {
 
     ResponseEntity<?> crearPropietario(UsuarioDTO usuarioDTO, BindingResult bindingResul);
-    ResponseEntity<?> login(LoginDTO loginDTO);
 
     ResponseEntity<?> buscarPorCorreo(String correo);
 }

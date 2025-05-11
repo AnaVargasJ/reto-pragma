@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +50,7 @@ public class UsuarioService implements IUsuarioService {
     public ResponseEntity<?> crearPropietario(@Valid UsuarioDTO usuarioDTO, BindingResult bindingResult) {
         Usuarios usuarios = new Usuarios();
         try {
-            Optional<Usuarios> usuarioExistente = usuarioRepository.buscarPorCorreo(usuarioDTO.getCorreo());
+
             if (usuarioRepository.buscarPorCorreo(usuarioDTO.getCorreo()).isPresent()) {
                 bindingResult.rejectValue("correo", "correo.duplicado", "El correo ya está registrado");
             }
@@ -99,7 +100,7 @@ public class UsuarioService implements IUsuarioService {
             authentication = jwtAuthenticationFilter.authenticateUser(usuarios);
             respuesta = jwtAuthenticationFilter.generateTokenResponse(authentication);
             return ResponseEntity.ok(respuesta);
-        } catch (IOException e) {
+        } catch (AuthenticationException | IOException e) {
             respuesta.put("error", e.getMessage());
             respuesta.put("mensaje", "credenciales invalidas");
             respuesta.put("codigo", HttpStatus.UNAUTHORIZED.value());
@@ -114,11 +115,11 @@ public class UsuarioService implements IUsuarioService {
         try {
             return usuarioRepository.buscarPorCorreo(correo)
                     .map(usuarios -> {
-                     try{
-                         UsuarioDTO usuarioDTO = genericConverter.mapEntityToDto(usuarios, UsuarioDTO.class);
+                        try{
+                            UsuarioDTO usuarioDTO = genericConverter.mapEntityToDto(usuarios, UsuarioDTO.class);
 
-                         return new ResponseEntity<>(usuarioDTO, HttpStatus.OK);
-                    } catch (Exception e) {
+                            return new ResponseEntity<>(usuarioDTO, HttpStatus.OK);
+                        } catch (Exception e) {
                             log.error("Error al convertir el json");
                             respuesta.put("error", e.getMessage());
                             respuesta.put("mensaje","Errores de validación en la solicitud");

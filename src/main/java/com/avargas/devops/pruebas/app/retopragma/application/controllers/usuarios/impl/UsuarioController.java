@@ -60,30 +60,7 @@ public class UsuarioController implements IUsuarioController {
         return usuarioService.crearPropietario(usuarioDTO, bindingResult);
     }
 
-    @Override
-    @PostMapping("/login")
-    @Operation(
-            summary = "Inicia sesión de un usuario",
-            description = "Este servicio permite a un usuario iniciar sesión con su información de usuario"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "El usuario ha iniciado sesión correctamente",
-                    content = @Content(schema = @Schema(implementation = Object.class))
-            )
-            ,
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "credenciales invalidas",
-                    content = @Content(schema = @Schema(implementation = Object.class))
-            )
-    })
-    public ResponseEntity<?> login(@RequestBody
-                                   @Parameter(description = "Datos de usuario", required = true, content = @Content(schema = @Schema(implementation = LoginDTO.class)))
-                                   LoginDTO loginDTO) {
-        return usuarioService.login(loginDTO);
-    }
+
 
     @Override
     @GetMapping("/buscarPorCorreo/{correo}")

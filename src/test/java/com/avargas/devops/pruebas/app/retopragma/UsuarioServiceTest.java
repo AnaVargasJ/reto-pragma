@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,7 +44,6 @@ class UsuarioServiceTest {
 
     @Autowired
     private GenericConverter genericConverter;
-
 
 
     @Test
@@ -77,6 +77,100 @@ class UsuarioServiceTest {
 
         Optional<Usuarios> usuario = usuarioRepository.buscarPorCorreo(usuarioDTO.getCorreo());
         assertTrue(usuario.isPresent());
+
+    }
+
+    @Test
+    @Order(2)
+    void crearPropietarioCorreoDuplicado() {
+        // Primero creamos un usuario
+        crearPropietarioExitoso();
+
+
+        UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+                .nombre("Test")
+                .apellido("User")
+                .correo("test@example.com")
+                .numeroDocumento("2345689")
+                .celular("123456789")
+                .fechaNacimiento("10/05/2000")
+                .clave("password")
+                .build();
+
+        BindingResult bindingResult = new BeanPropertyBindingResult(usuarioDTO, "usuarioDTO");
+
+        ResponseEntity<?> response = usuarioService.crearPropietario(usuarioDTO, bindingResult);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+
+        Map<String, String> errores = (Map<String, String>) response.getBody();
+        assertTrue(errores.containsKey("correo"));
+    }
+
+    @Test
+    @Order(3)
+    void crearPropietarioDocumentoDuplicado() {
+        crearPropietarioExitoso();
+        UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+                .nombre("Test")
+                .apellido("User")
+                .correo("testo1@example.com")
+                .numeroDocumento("123456789")
+                .celular("123456789")
+                .fechaNacimiento("10/05/2000")
+                .clave("password")
+                .build();
+
+        BindingResult bindingResult = new BeanPropertyBindingResult(usuarioDTO, "usuarioDTO");
+
+        ResponseEntity<?> response = usuarioService.crearPropietario(usuarioDTO, bindingResult);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+
+        Map<String, String> errores = (Map<String, String>) response.getBody();
+        assertTrue(errores.containsKey("numeroDocumento"));
+    }
+
+    @Test
+    @Order(4)
+    void crearPropietarioMenorEdad() {
+        crearPropietarioExitoso();
+        UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+                .nombre("Test")
+                .apellido("User")
+                .correo("testo1@example.com")
+                .numeroDocumento("123456789")
+                .celular("123456789")
+                .fechaNacimiento("10/05/2020")
+                .clave("password")
+                .build();
+
+        BindingResult bindingResult = new BeanPropertyBindingResult(usuarioDTO, "usuarioDTO");
+
+        ResponseEntity<?> response = usuarioService.crearPropietario(usuarioDTO, bindingResult);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+
+        Map<String, String> errores = (Map<String, String>) response.getBody();
+        assertTrue(errores.containsKey("fechaNacimiento"));
+    }
+
+    @Test
+    @Order(5)
+    void crearPropietarioNull() {
+
+        UsuarioDTO usuarioDTO = new UsuarioDTO();
+
+        BindingResult bindingResult = new BeanPropertyBindingResult(usuarioDTO, "usuarioDTO");
+
+        ResponseEntity<?> response = usuarioService.crearPropietario(usuarioDTO, bindingResult);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals("Error al crear el propietario", response.getBody());
+
 
     }
 }
