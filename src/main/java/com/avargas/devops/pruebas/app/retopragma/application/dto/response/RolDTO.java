@@ -1,4 +1,4 @@
-package com.avargas.devops.pruebas.app.retopragma.infraestructure.commons.domains.generic;
+package com.avargas.devops.pruebas.app.retopragma.application.dto.response;
 
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.FieldMapping;
 import lombok.AllArgsConstructor;

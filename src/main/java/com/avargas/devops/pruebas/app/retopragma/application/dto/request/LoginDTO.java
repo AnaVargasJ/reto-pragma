@@ -1,4 +1,4 @@
-package com.avargas.devops.pruebas.app.retopragma.infraestructure.commons.domains.generic;
+package com.avargas.devops.pruebas.app.retopragma.application.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;

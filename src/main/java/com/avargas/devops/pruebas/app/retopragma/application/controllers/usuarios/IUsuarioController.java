@@ -1,7 +1,6 @@
 package com.avargas.devops.pruebas.app.retopragma.application.controllers.usuarios;
 
-import com.avargas.devops.pruebas.app.retopragma.infraestructure.commons.domains.generic.LoginDTO;
-import com.avargas.devops.pruebas.app.retopragma.infraestructure.commons.domains.generic.UsuarioDTO;
+import com.avargas.devops.pruebas.app.retopragma.application.dto.request.UsuarioDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 

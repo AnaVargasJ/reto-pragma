@@ -1,4 +1,4 @@
-package com.avargas.devops.pruebas.app.retopragma.application.repositories;
+package com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.repositories;
 
 import com.avargas.devops.pruebas.app.retopragma.model.entities.usuarios.Usuarios;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +15,7 @@ public interface UsuarioRepository extends JpaRepository<Usuarios,Long> {
     @Query("SELECT u FROM Usuarios u WHERE u.numeroDocumento = ?1")
     Optional<Usuarios> existsByUsuarioDocumento(String numeroDocumento);
 
-    @Query("select u from Usuarios u " +
-            "where u.correo = :correo")
+    @Query("SELECT u FROM Usuarios u JOIN FETCH u.rol WHERE u.correo = :correo")
     Optional<Usuarios> buscarPorCorreo(@Param("correo") String correo);
+
 }

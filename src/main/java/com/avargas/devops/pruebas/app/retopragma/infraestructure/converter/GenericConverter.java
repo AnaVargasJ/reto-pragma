@@ -21,11 +21,16 @@ public class GenericConverter  {
             D dto = dtoClass.getDeclaredConstructor().newInstance();
             Map<String, String> fieldMapping = getFieldMappings(dtoClass);
 
-            for (Field entityField : entity.getClass().getDeclaredFields()) {
+            // Obtiene la clase real (sin proxies de Hibernate)
+            Class<?> entityClass = org.hibernate.Hibernate.getClass(entity);
+
+            for (Field entityField : entityClass.getDeclaredFields()) {
                 if (Modifier.isStatic(entityField.getModifiers()) ||
                         Modifier.isFinal(entityField.getModifiers()) ||
                         Collection.class.isAssignableFrom(entityField.getType()) ||
-                        entityField.isAnnotationPresent(FieldIgnore.class)) {
+                        entityField.isAnnotationPresent(FieldIgnore.class) ||
+                        entityField.getName().startsWith("$$") ||
+                        entityField.getName().contains("hibernate")) {
                     continue;
                 }
 
@@ -40,18 +45,27 @@ public class GenericConverter  {
 
                     dtoField.setAccessible(true);
                     Object value = entityField.get(entity);
-                    log.info("Tipo exacto del campo entidad: " + entityField.getType().getName());
+                    log.info("Mapeando campo '{}' (tipo entidad: {}) a '{}' (tipo DTO: {})",
+                            entityField.getName(), entityField.getType().getSimpleName(),
+                            dtoField.getName(), dtoField.getType().getSimpleName());
 
-                    if (value instanceof Date && dtoField.getType().equals(String.class)) {
-                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.forLanguageTag("es-CO"));
-                        value = sdf.format((Date) value);
+                    // Manejo de objetos anidados tipo DTO
+                    if (value != null && dtoField.getType().getSimpleName().endsWith("DTO")) {
+                        Object nestedDto = mapEntityToDto(value, dtoField.getType());
+                        dtoField.set(dto, nestedDto);
+                        continue;
                     }
 
+                    // Conversión de Date a String
+                    if (value instanceof Date && dtoField.getType().equals(String.class)) {
+                        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT, Locale.forLanguageTag("es-CO"));
+                        value = sdf.format((Date) value);
+                    }
 
                     dtoField.set(dto, value);
 
                 } catch (NoSuchFieldException ignored) {
-                    log.warn("Campo no encontrado en el DTO: " + dtoFieldName);
+                    log.warn("Campo no encontrado en el DTO: {}", dtoFieldName);
                 }
             }
 
@@ -62,6 +76,7 @@ public class GenericConverter  {
             throw new RuntimeException("Error mapping entity to DTO: " + e.getMessage(), e);
         }
     }
+
 
 
 

@@ -1,6 +1,6 @@
 package com.avargas.devops.pruebas.app.retopragma.infraestructure.security.jpa;
 
-import com.avargas.devops.pruebas.app.retopragma.application.repositories.UsuarioRepository;
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.repositories.UsuarioRepository;
 import com.avargas.devops.pruebas.app.retopragma.model.entities.usuarios.Usuarios;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

@@ -1,7 +1,7 @@
 package com.avargas.devops.pruebas.app.retopragma.infraestructure.commons.validation;
 
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.ExistByUsername;
-import com.avargas.devops.pruebas.app.retopragma.application.repositories.UsuarioRepository;
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.repositories.UsuarioRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;

@@ -1,9 +1,9 @@
 package com.avargas.devops.pruebas.app.retopragma;
 
-import com.avargas.devops.pruebas.app.retopragma.application.repositories.RolesRepository;
-import com.avargas.devops.pruebas.app.retopragma.application.repositories.UsuarioRepository;
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.repositories.RolesRepository;
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.repositories.UsuarioRepository;
 import com.avargas.devops.pruebas.app.retopragma.application.services.usuarios.impl.UsuarioService;
-import com.avargas.devops.pruebas.app.retopragma.infraestructure.commons.domains.generic.UsuarioDTO;
+import com.avargas.devops.pruebas.app.retopragma.application.dto.request.UsuarioDTO;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.converter.GenericConverter;
 import com.avargas.devops.pruebas.app.retopragma.model.entities.usuarios.Roles;
 import com.avargas.devops.pruebas.app.retopragma.model.entities.usuarios.Usuarios;

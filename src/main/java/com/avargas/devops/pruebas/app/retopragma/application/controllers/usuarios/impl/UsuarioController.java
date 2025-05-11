@@ -2,8 +2,7 @@ package com.avargas.devops.pruebas.app.retopragma.application.controllers.usuari
 
 import com.avargas.devops.pruebas.app.retopragma.application.controllers.usuarios.IUsuarioController;
 import com.avargas.devops.pruebas.app.retopragma.application.services.usuarios.IUsuarioService;
-import com.avargas.devops.pruebas.app.retopragma.infraestructure.commons.domains.generic.LoginDTO;
-import com.avargas.devops.pruebas.app.retopragma.infraestructure.commons.domains.generic.UsuarioDTO;
+import com.avargas.devops.pruebas.app.retopragma.application.dto.request.UsuarioDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

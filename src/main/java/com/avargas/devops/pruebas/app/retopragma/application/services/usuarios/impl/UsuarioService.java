@@ -1,12 +1,12 @@
 package com.avargas.devops.pruebas.app.retopragma.application.services.usuarios.impl;
 
-import com.avargas.devops.pruebas.app.retopragma.application.repositories.RolesRepository;
-import com.avargas.devops.pruebas.app.retopragma.application.repositories.UsuarioRepository;
+import com.avargas.devops.pruebas.app.retopragma.application.dto.response.UsuarioDTOResponse;
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.repositories.RolesRepository;
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.repositories.UsuarioRepository;
 import com.avargas.devops.pruebas.app.retopragma.application.services.usuarios.IUsuarioService;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.commons.constants.Rol;
-import com.avargas.devops.pruebas.app.retopragma.infraestructure.commons.domains.generic.LoginDTO;
-import com.avargas.devops.pruebas.app.retopragma.infraestructure.commons.domains.generic.UsuarioDTO;
-import com.avargas.devops.pruebas.app.retopragma.infraestructure.commons.exceptions.NoDataFoundException;
+import com.avargas.devops.pruebas.app.retopragma.application.dto.request.LoginDTO;
+import com.avargas.devops.pruebas.app.retopragma.application.dto.request.UsuarioDTO;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.converter.GenericConverter;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.security.auth.JwtAuthenticationFilter;
 import com.avargas.devops.pruebas.app.retopragma.model.entities.usuarios.Roles;
@@ -22,7 +22,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 
 import java.io.IOException;
@@ -32,7 +31,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -116,7 +114,7 @@ public class UsuarioService implements IUsuarioService {
             return usuarioRepository.buscarPorCorreo(correo)
                     .map(usuarios -> {
                         try{
-                            UsuarioDTO usuarioDTO = genericConverter.mapEntityToDto(usuarios, UsuarioDTO.class);
+                            UsuarioDTOResponse usuarioDTO = genericConverter.mapEntityToDto(usuarios, UsuarioDTOResponse.class);
 
                             return new ResponseEntity<>(usuarioDTO, HttpStatus.OK);
                         } catch (Exception e) {
