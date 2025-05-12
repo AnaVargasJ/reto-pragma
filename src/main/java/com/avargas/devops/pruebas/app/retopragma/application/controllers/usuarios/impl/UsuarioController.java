@@ -84,7 +84,6 @@ public class UsuarioController implements IUsuarioController {
                     content = @Content(schema = @Schema(implementation = Map.class)) // Map<String, Object>
             )
     })
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> buscarPorCorreo(@PathVariable
                                              @Parameter(description = "Correo electrónico del usuario a buscar", required = true)
                                              String correo) {
