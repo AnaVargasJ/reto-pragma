@@ -2,8 +2,8 @@ package com.avargas.devops.pruebas.app.retopragma;
 
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.repositories.RolesRepository;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.repositories.UsuarioRepository;
-import com.avargas.devops.pruebas.app.retopragma.application.services.usuarios.impl.UsuarioService;
-import com.avargas.devops.pruebas.app.retopragma.application.dto.request.UsuarioDTO;
+import com.avargas.devops.pruebas.app.retopragma.application.services.usuarios.propietarios.impl.PropietarioService;
+import com.avargas.devops.pruebas.app.retopragma.application.dto.request.UsuarioPropietarioDTO;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.converter.GenericConverter;
 import com.avargas.devops.pruebas.app.retopragma.model.entities.usuarios.Roles;
 import com.avargas.devops.pruebas.app.retopragma.model.entities.usuarios.Usuarios;
@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class UsuarioServiceTest {
 
     @Autowired
-    private UsuarioService usuarioService;
+    private PropietarioService usuarioService;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -57,7 +57,7 @@ class UsuarioServiceTest {
 
         rolesRepository.save(rolProp);
 
-        UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+        UsuarioPropietarioDTO usuarioPropietarioDTO = UsuarioPropietarioDTO.builder()
                 .nombre("Test")
                 .apellido("User")
                 .correo("test@example.com")
@@ -67,15 +67,15 @@ class UsuarioServiceTest {
                 .clave("password")
                 .build();
 
-        BindingResult bindingResult = new BeanPropertyBindingResult(usuarioDTO, "usuarioDTO");
+        BindingResult bindingResult = new BeanPropertyBindingResult(usuarioPropietarioDTO, "usuarioDTO");
 
-        ResponseEntity<?> response = usuarioService.crearPropietario(usuarioDTO, bindingResult);
+        ResponseEntity<?> response = usuarioService.crearPropietario(usuarioPropietarioDTO, bindingResult);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals("Propietario creado correctamente", response.getBody());
 
 
-        Optional<Usuarios> usuario = usuarioRepository.buscarPorCorreo(usuarioDTO.getCorreo());
+        Optional<Usuarios> usuario = usuarioRepository.buscarPorCorreo(usuarioPropietarioDTO.getCorreo());
         assertTrue(usuario.isPresent());
 
     }
@@ -83,11 +83,8 @@ class UsuarioServiceTest {
     @Test
     @Order(2)
     void crearPropietarioCorreoDuplicado() {
-        // Primero creamos un usuario
         crearPropietarioExitoso();
-
-
-        UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+        UsuarioPropietarioDTO usuarioPropietarioDTO = UsuarioPropietarioDTO.builder()
                 .nombre("Test")
                 .apellido("User")
                 .correo("test@example.com")
@@ -97,13 +94,11 @@ class UsuarioServiceTest {
                 .clave("password")
                 .build();
 
-        BindingResult bindingResult = new BeanPropertyBindingResult(usuarioDTO, "usuarioDTO");
+        BindingResult bindingResult = new BeanPropertyBindingResult(usuarioPropietarioDTO, "usuarioDTO");
 
-        ResponseEntity<?> response = usuarioService.crearPropietario(usuarioDTO, bindingResult);
+        ResponseEntity<?> response = usuarioService.crearPropietario(usuarioPropietarioDTO, bindingResult);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-
-
         Map<String, String> errores = (Map<String, String>) response.getBody();
         assertTrue(errores.containsKey("correo"));
     }
@@ -112,7 +107,7 @@ class UsuarioServiceTest {
     @Order(3)
     void crearPropietarioDocumentoDuplicado() {
         crearPropietarioExitoso();
-        UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+        UsuarioPropietarioDTO usuarioPropietarioDTO = UsuarioPropietarioDTO.builder()
                 .nombre("Test")
                 .apellido("User")
                 .correo("testo1@example.com")
@@ -122,13 +117,11 @@ class UsuarioServiceTest {
                 .clave("password")
                 .build();
 
-        BindingResult bindingResult = new BeanPropertyBindingResult(usuarioDTO, "usuarioDTO");
+        BindingResult bindingResult = new BeanPropertyBindingResult(usuarioPropietarioDTO, "usuarioDTO");
 
-        ResponseEntity<?> response = usuarioService.crearPropietario(usuarioDTO, bindingResult);
+        ResponseEntity<?> response = usuarioService.crearPropietario(usuarioPropietarioDTO, bindingResult);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-
-
         Map<String, String> errores = (Map<String, String>) response.getBody();
         assertTrue(errores.containsKey("numeroDocumento"));
     }
@@ -137,7 +130,7 @@ class UsuarioServiceTest {
     @Order(4)
     void crearPropietarioMenorEdad() {
         crearPropietarioExitoso();
-        UsuarioDTO usuarioDTO = UsuarioDTO.builder()
+        UsuarioPropietarioDTO usuarioPropietarioDTO = UsuarioPropietarioDTO.builder()
                 .nombre("Test")
                 .apellido("User")
                 .correo("testo1@example.com")
@@ -147,9 +140,9 @@ class UsuarioServiceTest {
                 .clave("password")
                 .build();
 
-        BindingResult bindingResult = new BeanPropertyBindingResult(usuarioDTO, "usuarioDTO");
+        BindingResult bindingResult = new BeanPropertyBindingResult(usuarioPropietarioDTO, "usuarioDTO");
 
-        ResponseEntity<?> response = usuarioService.crearPropietario(usuarioDTO, bindingResult);
+        ResponseEntity<?> response = usuarioService.crearPropietario(usuarioPropietarioDTO, bindingResult);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
@@ -161,12 +154,11 @@ class UsuarioServiceTest {
     @Test
     @Order(5)
     void crearPropietarioNull() {
+        UsuarioPropietarioDTO usuarioPropietarioDTO = new UsuarioPropietarioDTO();
 
-        UsuarioDTO usuarioDTO = new UsuarioDTO();
+        BindingResult bindingResult = new BeanPropertyBindingResult(usuarioPropietarioDTO, "usuarioDTO");
 
-        BindingResult bindingResult = new BeanPropertyBindingResult(usuarioDTO, "usuarioDTO");
-
-        ResponseEntity<?> response = usuarioService.crearPropietario(usuarioDTO, bindingResult);
+        ResponseEntity<?> response = usuarioService.crearPropietario(usuarioPropietarioDTO, bindingResult);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertEquals("Error al crear el propietario", response.getBody());

@@ -2,7 +2,7 @@ package com.avargas.devops.pruebas.app.retopragma.application.controllers.login.
 
 
 import com.avargas.devops.pruebas.app.retopragma.application.controllers.login.ILoginController;
-import com.avargas.devops.pruebas.app.retopragma.application.services.usuarios.IUsuarioService;
+import com.avargas.devops.pruebas.app.retopragma.application.services.usuarios.propietarios.IPropietarioService;
 import com.avargas.devops.pruebas.app.retopragma.application.dto.request.LoginDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController implements ILoginController {
 
 
-    private final IUsuarioService usuarioService;
+    private final IPropietarioService usuarioService;
 
     @Override
     @PostMapping("/login")

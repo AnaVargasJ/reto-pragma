@@ -1,6 +1,5 @@
-package com.avargas.devops.pruebas.app.retopragma.infraestructure.commons.validation;
+package com.avargas.devops.pruebas.app.retopragma.infraestructure.input.rest;
 
-import com.avargas.devops.pruebas.app.retopragma.infraestructure.ExistByUsername;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.repositories.UsuarioRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -9,14 +8,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ExistsByUsernameValidation implements ConstraintValidator<ExistByUsername,String> {
+public class ExistsByCorreoValidation implements ConstraintValidator<ExistByCorreo,String> {
 
     private final UsuarioRepository usuarioRepository;
 
     @Override
     public boolean isValid(String correo, ConstraintValidatorContext constraintValidatorContext) {
-        return !usuarioRepository.existsByUsername(correo);
+        return !usuarioRepository.existsByCorreo(correo);
     }
-
 
 }

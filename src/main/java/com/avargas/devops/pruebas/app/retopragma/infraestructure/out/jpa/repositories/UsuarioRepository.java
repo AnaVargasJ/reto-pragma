@@ -9,8 +9,14 @@ import java.util.Optional;
 
 public interface UsuarioRepository extends JpaRepository<Usuarios,Long> {
 
-    @Query("SELECT u FROM Usuarios u WHERE u.correo = ?1")
-    Boolean existsByUsername(String correo);
+    /*@Query("SELECT u FROM Usuarios u WHERE u.correo = ?1")
+    Boolean existsByCorreo(String correo);
+
+    @Query("SELECT u FROM Usuarios u WHERE u.numeroDocumento = ?1")
+    Boolean existsByNumeroDocumento(String numeroDocumento);*/
+
+    Boolean existsByCorreo(String correo);
+    Boolean existsByNumeroDocumento(String numeroDocumento);
 
     @Query("SELECT u FROM Usuarios u WHERE u.numeroDocumento = ?1")
     Optional<Usuarios> existsByUsuarioDocumento(String numeroDocumento);

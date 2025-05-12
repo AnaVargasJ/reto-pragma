@@ -1,5 +1,6 @@
 package com.avargas.devops.pruebas.app.retopragma.application.dto.request;
 
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.input.rest.ExistByCorreo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -19,7 +20,7 @@ public class LoginDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-
+    @ExistByCorreo
     @NotBlank
     @Email
     @Schema(description = "Correo electrónico del usuario", example = "usuario@correo.com", type = "string", format = "email")
