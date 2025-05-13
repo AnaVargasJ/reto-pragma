@@ -1,7 +1,8 @@
 package com.avargas.devops.pruebas.app.retopragma.infraestructure.security.jpa;
 
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.entity.Usuarios;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.repositories.UsuarioRepository;
-import com.avargas.devops.pruebas.app.retopragma.model.entities.usuarios.Usuarios;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,19 +32,18 @@ public class JpaUserDetailsService implements UserDetailsService {
 
         Usuarios usuario = userOptional.get();
 
-        // Solo un rol por usuario, lo convertimos a lista de GrantedAuthority
         List<GrantedAuthority> authorities = List.of(
                 new SimpleGrantedAuthority("ROLE_" + usuario.getRol().getNombre())
         );
 
 
         return new org.springframework.security.core.userdetails.User(
-                usuario.getCorreo(),         // ← username
-                usuario.getClave(),          // ← password (BCrypt)
-                true,                        // enabled
-                true,                        // accountNonExpired
-                true,                        // credentialsNonExpired
-                true,                        // accountNonLocked
+                usuario.getCorreo(),
+                usuario.getClave(),
+                true,
+                true,
+                true,
+                true,
                 authorities
         );
     }

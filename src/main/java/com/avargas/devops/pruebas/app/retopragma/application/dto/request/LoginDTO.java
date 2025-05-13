@@ -19,14 +19,9 @@ public class LoginDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-
-    @NotBlank
-    @Email
     @Schema(description = "Correo electrónico del usuario", example = "usuario@correo.com", type = "string", format = "email")
     private String correo;
 
-    @NotBlank
-    @Size(min = 6, max = 13)
     @Schema(description = "Clave del usuario, entre 6 y 13 caracteres", example = "clave123", type = "string", minLength = 6, maxLength = 13)
     private String clave;
 }

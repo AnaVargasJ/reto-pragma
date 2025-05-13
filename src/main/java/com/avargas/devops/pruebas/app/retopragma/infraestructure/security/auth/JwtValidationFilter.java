@@ -34,6 +34,8 @@ public class JwtValidationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+        System.out.println("Filtro ejecutado para: " + request.getRequestURI());
+
 
         String header = request.getHeader(TokenJwtConfig.HEADER_AUTHORIZATION);
 
@@ -82,7 +84,16 @@ public class JwtValidationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        System.out.println(" shouldNotFilter: " + request.getRequestURI());
+
         String path = request.getRequestURI();
-        return path.equals("/login");
+        System.out.println(" shouldNotFilter 1: " + request.getRequestURI());
+        return path.equals("/login") ||
+                path.startsWith("/swagger-ui") ||
+                path.startsWith("/v3/api-docs") ||
+                path.startsWith("/swagger-resources") ||
+                path.startsWith("/webjars") ||
+                path.startsWith("/configuration");
     }
+
 }

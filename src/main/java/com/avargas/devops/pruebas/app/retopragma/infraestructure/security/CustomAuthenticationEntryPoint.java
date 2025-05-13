@@ -19,6 +19,17 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
+        String path = request.getRequestURI();
+
+        if (path.startsWith("/swagger-ui") ||
+                path.startsWith("/v3/api-docs") ||
+                path.startsWith("/swagger-resources") ||
+                path.startsWith("/webjars") ||
+                path.startsWith("/configuration")) {
+            response.setStatus(HttpStatus.OK.value());
+            response.getWriter().write("");
+            return;
+        }
 
         Map<String, Object> error = new HashMap<>();
         error.put("mensaje", "No autorizado: token inválido o no enviado");
@@ -26,7 +37,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         error.put("error", authException.getMessage());
 
         response.setStatus(HttpStatus.FORBIDDEN.value());
-        response.setContentType(TokenJwtConfig.CONTENT_TYPE); // "application/json"
+        response.setContentType(TokenJwtConfig.CONTENT_TYPE); // application/json
         response.getWriter().write(new ObjectMapper().writeValueAsString(error));
     }
 }

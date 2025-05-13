@@ -15,10 +15,8 @@ import java.io.Serializable;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UsuarioDTOResponse implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
-    @FieldMapping("id")
     private Long idUsuario;
     private String nombre;
     private String apellido;

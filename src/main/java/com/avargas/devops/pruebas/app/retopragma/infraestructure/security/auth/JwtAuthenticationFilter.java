@@ -1,8 +1,9 @@
 package com.avargas.devops.pruebas.app.retopragma.infraestructure.security.auth;
 
-import com.avargas.devops.pruebas.app.retopragma.infraestructure.commons.exceptions.NoDataFoundException;
+
+import com.avargas.devops.pruebas.app.retopragma.domain.model.UsuarioModel;
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.exception.NoDataFoundException;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.security.jwt.TokenJwtConfig;
-import com.avargas.devops.pruebas.app.retopragma.model.entities.usuarios.Usuarios;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -31,7 +32,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final AuthenticationManager authenticationManager;
 
-    public Authentication authenticateUser(Usuarios user) throws AuthenticationException {
+    public Authentication authenticateUser(UsuarioModel user) throws AuthenticationException {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(user.getCorreo(), user.getClave());
         return authenticationManager.authenticate(authenticationToken);
@@ -66,7 +67,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
         try {
-            Usuarios user = new ObjectMapper().readValue(request.getInputStream(), Usuarios.class);
+            UsuarioModel user = new ObjectMapper().readValue(request.getInputStream(), UsuarioModel.class);
             return authenticateUser(user);
         } catch (IOException e) {
             throw new NoDataFoundException("Error al leer las credenciales del usuario", e);
