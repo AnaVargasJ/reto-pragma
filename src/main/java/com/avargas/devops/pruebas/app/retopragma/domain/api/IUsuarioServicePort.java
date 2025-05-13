@@ -1,0 +1,9 @@
+package com.avargas.devops.pruebas.app.retopragma.domain.api;
+import com.avargas.devops.pruebas.app.retopragma.domain.model.UsuarioModel;
+
+public interface IUsuarioServicePort {
+    void createUser(UsuarioModel usuarioModel);
+    UsuarioModel login(String correo, String clave);
+
+
+}

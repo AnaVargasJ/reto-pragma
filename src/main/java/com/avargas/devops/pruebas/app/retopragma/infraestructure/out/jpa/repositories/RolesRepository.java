@@ -1,6 +1,6 @@
 package com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.repositories;
 
-import com.avargas.devops.pruebas.app.retopragma.model.entities.usuarios.Roles;
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.entity.Roles;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package com.avargas.devops.pruebas.app.retopragma.model.entities.usuarios;
+package com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.entity;
 
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.FieldIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;

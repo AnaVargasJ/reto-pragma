@@ -1,8 +1,9 @@
-package com.avargas.devops.pruebas.app.retopragma.application.controllers.usuarios.impl;
+package com.avargas.devops.pruebas.app.retopragma.infraestructure.input.rest.usuarios.impl;
 
-import com.avargas.devops.pruebas.app.retopragma.application.controllers.usuarios.IUsuarioController;
-import com.avargas.devops.pruebas.app.retopragma.application.services.usuarios.IUsuarioService;
-import com.avargas.devops.pruebas.app.retopragma.application.dto.request.UsuarioDTO;
+import com.avargas.devops.pruebas.app.retopragma.application.dto.request.UsuarioPropietarioRequestDTO;
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.input.rest.usuarios.IUsuarioController;
+import com.avargas.devops.pruebas.app.retopragma.application.handler.usuarios.IUsuarioPropietarioHandler;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,7 +26,8 @@ import java.util.Map;
 @Tag(name = "Propietario", description = "Aplicación que crea propietarios por medio de un administrador")
 public class UsuarioController implements IUsuarioController {
 
-    private final IUsuarioService usuarioService;
+    private final IUsuarioPropietarioHandler usuarioService;
+
 
     @Override
     @PostMapping("/crearPropietario")
@@ -54,12 +56,12 @@ public class UsuarioController implements IUsuarioController {
             )
     })
     public ResponseEntity<?> crearPropietario(@Valid @RequestBody
-                                              @Parameter(description = "Datos de usuario", required = true, content = @Content(schema = @Schema(implementation = UsuarioDTO.class)))
-                                              UsuarioDTO usuarioDTO, BindingResult bindingResult) {
-        return usuarioService.crearPropietario(usuarioDTO, bindingResult);
+                                              @Parameter(description = "Datos de usuario", required = true, content = @Content(schema = @Schema(implementation = UsuarioPropietarioRequestDTO.class)))
+                                                  UsuarioPropietarioRequestDTO usuarioPropietarioRequestDTO) {
+
+        return usuarioService.crearPropietario(usuarioPropietarioRequestDTO);
+
     }
-
-
 
     @Override
     @GetMapping("/buscarPorCorreo/{correo}")
@@ -71,7 +73,7 @@ public class UsuarioController implements IUsuarioController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Usuario encontrado correctamente",
-                    content = @Content(schema = @Schema(implementation = UsuarioDTO.class))
+                    content = @Content(schema = @Schema(implementation = UsuarioPropietarioRequestDTO.class))
             ),
             @ApiResponse(
                     responseCode = "400",

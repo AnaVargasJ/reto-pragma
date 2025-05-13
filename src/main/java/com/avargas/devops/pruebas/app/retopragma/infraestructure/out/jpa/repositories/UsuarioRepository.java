@@ -1,6 +1,6 @@
 package com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.repositories;
 
-import com.avargas.devops.pruebas.app.retopragma.model.entities.usuarios.Usuarios;
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.entity.Usuarios;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
