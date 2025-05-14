@@ -1,9 +1,8 @@
 package com.avargas.devops.pruebas.app.retopragma.infraestructure.input.rest.usuarios.impl;
 
 import com.avargas.devops.pruebas.app.retopragma.application.dto.request.UsuarioPropietarioRequestDTO;
-import com.avargas.devops.pruebas.app.retopragma.infraestructure.input.rest.usuarios.IUsuarioController;
 import com.avargas.devops.pruebas.app.retopragma.application.handler.usuarios.IUsuarioPropietarioHandler;
-
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.input.rest.usuarios.IUsuarioController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,7 +14,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -86,8 +84,8 @@ public class UsuarioController implements IUsuarioController {
                     content = @Content(schema = @Schema(implementation = Map.class)) // Map<String, Object>
             )
     })
-    public ResponseEntity<?> buscarPorCorreo(@PathVariable
-                                             @Parameter(description = "Correo electrónico del usuario a buscar", required = true)
+    public ResponseEntity<?> buscarPorCorreo(@PathVariable("correo")
+                                                 @Parameter(description = "Correo electrónico del usuario a buscar", required = true)
                                              String correo) {
         return usuarioService.buscarPorCorreo(correo);
     }
