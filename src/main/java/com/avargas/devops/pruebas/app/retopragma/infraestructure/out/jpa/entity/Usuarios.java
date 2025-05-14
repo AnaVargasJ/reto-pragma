@@ -1,9 +1,11 @@
 package com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.entity;
 
-import com.avargas.devops.pruebas.app.retopragma.infraestructure.FieldIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -42,7 +44,7 @@ public class Usuarios implements Serializable {
     private String correo;
 
     //Oculta la clave en la respuesta del servicio
-    @FieldIgnore
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "clave", nullable = false)
     private String clave;

@@ -3,7 +3,9 @@ package com.avargas.devops.pruebas.app.retopragma.infraestructure.exceptionhandl
 
 import com.avargas.devops.pruebas.app.retopragma.application.dto.response.ResponseDTO;
 import com.avargas.devops.pruebas.app.retopragma.domain.exception.UsuariosDomainException;
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.exception.CredencialesInvalidasException;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.exception.NoDataFoundException;
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.exception.TokenInvalidoException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -60,4 +62,28 @@ public class ControllerAdvisor {
                         .build()
         );
     }
+
+    @ExceptionHandler(CredencialesInvalidasException.class)
+    public ResponseEntity<ResponseDTO> handleCredencialesInvalidas(CredencialesInvalidasException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                ResponseDTO.builder()
+                        .mensaje("Credenciales inválidas")
+                        .respuesta(Map.of("error", ex.getMessage()))
+                        .codigo(HttpStatus.UNAUTHORIZED.value())
+                        .build()
+        );
+    }
+
+    @ExceptionHandler(TokenInvalidoException.class)
+    public ResponseEntity<ResponseDTO> handleTokenInvalido(TokenInvalidoException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                ResponseDTO.builder()
+                        .mensaje("Token inválido")
+                        .respuesta(Map.of("error", ex.getMessage()))
+                        .codigo(HttpStatus.UNAUTHORIZED.value())
+                        .build()
+        );
+    }
+
+
 }

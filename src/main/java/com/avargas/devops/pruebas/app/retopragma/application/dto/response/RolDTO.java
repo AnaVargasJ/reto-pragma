@@ -1,6 +1,5 @@
 package com.avargas.devops.pruebas.app.retopragma.application.dto.response;
 
-import com.avargas.devops.pruebas.app.retopragma.infraestructure.FieldMapping;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +18,5 @@ public class RolDTO implements Serializable {
     private String nombre;
     private String descripcion;
 
-    // Getters and Setters
 
 }

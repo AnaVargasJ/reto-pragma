@@ -1,7 +1,9 @@
 package com.avargas.devops.pruebas.app.retopragma.infraestructure.security.auth;
 
+import com.avargas.devops.pruebas.app.retopragma.application.dto.response.ResponseDTO;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.security.jwt.SimpleGrantedAuthorityJsonCreator;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.security.jwt.TokenJwtConfig;
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.shared.ResponseUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -68,17 +70,15 @@ public class JwtValidationFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
 
         } catch (JwtException e) {
-            Map<String, Object> body = new HashMap<>();
-            body.put("error", e.getMessage());
+            ResponseDTO dto = ResponseUtil.error(
+                    "Token invalido",
+                    Map.of("error", e.getMessage()),
+                    HttpStatus.UNAUTHORIZED.value()
+            );
 
-            Map<String, Object> error = new HashMap<>();
-            error.put("mensaje", "Token invalido");
-            error.put("respuesta", body);
-            error.put("codigo", HttpStatus.UNAUTHORIZED.value());
-
-            response.setStatus(HttpStatus.OK.value());
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.setContentType(TokenJwtConfig.CONTENT_TYPE);
-            response.getWriter().write(new ObjectMapper().writeValueAsString(error));
+            response.getWriter().write(new ObjectMapper().writeValueAsString(dto));
         }
     }
 

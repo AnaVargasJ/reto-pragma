@@ -5,5 +5,7 @@ public interface IUsuarioServicePort {
     void createUser(UsuarioModel usuarioModel);
     UsuarioModel login(String correo, String clave);
 
+    UsuarioModel getUsuarioByCorreo(String correo);
+
 
 }

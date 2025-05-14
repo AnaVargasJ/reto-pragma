@@ -1,6 +1,6 @@
 package com.avargas.devops.pruebas.app.retopragma;
 
-import com.avargas.devops.pruebas.app.retopragma.application.mapper.propietarios.IUsuarioPropietarioRequestMapper;
+import com.avargas.devops.pruebas.app.retopragma.application.mapper.IUsuarioRequestMapper;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,7 +11,7 @@ class IUsuarioPropietarioRequestMapperTest {
         String fechaInvalida = "31-12-2000";
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
-                () -> IUsuarioPropietarioRequestMapper.parseFecha(fechaInvalida)
+                () -> IUsuarioRequestMapper.parseFecha(fechaInvalida)
         );
 
         assertTrue(exception.getMessage().contains("Formato de fecha inválido"));

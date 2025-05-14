@@ -1,6 +1,5 @@
 package com.avargas.devops.pruebas.app.retopragma.application.dto.response;
 
-import com.avargas.devops.pruebas.app.retopragma.infraestructure.FieldMapping;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +23,5 @@ public class UsuarioDTOResponse implements Serializable {
     private String celular;
     private String fechaNacimiento;
     private String correo;
-    private String clave;
     private RolDTO rol;
 }

@@ -48,4 +48,13 @@ public class UsuarioUseCase implements IUsuarioServicePort {
         usuarioValidationCase.validaLoginFiels(correo, clave);
         return usuario;
     }
+
+    @Override
+    public UsuarioModel getUsuarioByCorreo(String correo) {
+        UsuarioModel usuario = usuarioPersistencePort.getUsuarioByCorreo(correo);
+        if (usuario == null) {
+            throw new UsuariosDomainException("Usuario no encontrado");
+        }
+        return usuario;
+    }
 }
