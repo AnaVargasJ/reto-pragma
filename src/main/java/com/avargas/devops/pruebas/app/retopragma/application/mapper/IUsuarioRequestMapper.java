@@ -1,7 +1,7 @@
 package com.avargas.devops.pruebas.app.retopragma.application.mapper;
 
 import com.avargas.devops.pruebas.app.retopragma.application.dto.request.LoginDTO;
-import com.avargas.devops.pruebas.app.retopragma.application.dto.request.UsuarioPropietarioRequestDTO;
+import com.avargas.devops.pruebas.app.retopragma.application.dto.request.UsuarioRequestDTO;
 import com.avargas.devops.pruebas.app.retopragma.domain.model.UsuarioModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -14,7 +14,7 @@ import java.util.Date;
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface IUsuarioRequestMapper {
-    default UsuarioModel toUsuarioModel(UsuarioPropietarioRequestDTO dto) {
+    default UsuarioModel toUsuarioModel(UsuarioRequestDTO dto) {
         return UsuarioModel.builder()
                 .nombre(dto.getNombre())
                 .apellido(dto.getApellido())

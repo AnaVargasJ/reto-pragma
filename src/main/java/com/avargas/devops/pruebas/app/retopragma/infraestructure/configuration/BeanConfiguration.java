@@ -1,9 +1,11 @@
 package com.avargas.devops.pruebas.app.retopragma.infraestructure.configuration;
 
-import com.avargas.devops.pruebas.app.retopragma.domain.api.IUsuarioServicePort;
+import com.avargas.devops.pruebas.app.retopragma.domain.api.usuarios.empleados.IUsuarioEmpleadoServicePort;
+import com.avargas.devops.pruebas.app.retopragma.domain.api.usuarios.propietarios.IUsuarioServicePort;
 import com.avargas.devops.pruebas.app.retopragma.domain.spi.IUsuarioPersistencePort;
 import com.avargas.devops.pruebas.app.retopragma.domain.usecase.UsuarioUseCase;
 import com.avargas.devops.pruebas.app.retopragma.domain.usecase.UsuarioValidationCase;
+import com.avargas.devops.pruebas.app.retopragma.domain.usecase.empleado.UsuarioEmpleadoUseCase;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.adapters.UsuarioJpaAdapter;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.mapper.IUsuarioEntityMapper;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.repositories.RolesRepository;
@@ -51,4 +53,12 @@ public class BeanConfiguration {
             }
         };
     }
+
+
+    @Bean
+    public IUsuarioEmpleadoServicePort iUsuarioEmpleadoServicePort(){
+        return new UsuarioEmpleadoUseCase(usuarioPersistencePort(),usuarioValidationCase());
+    }
+
+
 }

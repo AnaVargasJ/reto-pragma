@@ -1,4 +1,4 @@
-package com.avargas.devops.pruebas.app.retopragma.domain.api;
+package com.avargas.devops.pruebas.app.retopragma.domain.api.usuarios.propietarios;
 import com.avargas.devops.pruebas.app.retopragma.domain.model.UsuarioModel;
 
 public interface IUsuarioServicePort {

@@ -1,13 +1,13 @@
 package com.avargas.devops.pruebas.app.retopragma.application.handler.usuarios.propietarios.impl;
 
 import com.avargas.devops.pruebas.app.retopragma.application.dto.request.LoginDTO;
-import com.avargas.devops.pruebas.app.retopragma.application.dto.request.UsuarioPropietarioRequestDTO;
+import com.avargas.devops.pruebas.app.retopragma.application.dto.request.UsuarioRequestDTO;
 import com.avargas.devops.pruebas.app.retopragma.application.dto.response.ResponseDTO;
 import com.avargas.devops.pruebas.app.retopragma.application.dto.response.UsuarioDTOResponse;
 import com.avargas.devops.pruebas.app.retopragma.application.handler.usuarios.IUsuarioPropietarioHandler;
 import com.avargas.devops.pruebas.app.retopragma.application.mapper.IUsuarioRequestMapper;
 import com.avargas.devops.pruebas.app.retopragma.application.mapper.IUsuarioResponseMapper;
-import com.avargas.devops.pruebas.app.retopragma.domain.api.IUsuarioServicePort;
+import com.avargas.devops.pruebas.app.retopragma.domain.api.usuarios.propietarios.IUsuarioServicePort;
 import com.avargas.devops.pruebas.app.retopragma.domain.model.UsuarioModel;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.exception.TokenInvalidoException;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.security.auth.JwtAuthenticationFilter;
@@ -35,9 +35,9 @@ public class UsuarioPropietarioHandler implements IUsuarioPropietarioHandler {
 
     @Override
     @Transactional
-    public ResponseEntity<?> crearPropietario(UsuarioPropietarioRequestDTO usuarioPropietarioRequestDTO) {
+    public ResponseEntity<?> crearPropietario(UsuarioRequestDTO usuarioRequestDTO) {
 
-        UsuarioModel usuarioModel = iUsuarioPropietarioRequestMapper.toUsuarioModel(usuarioPropietarioRequestDTO);
+        UsuarioModel usuarioModel = iUsuarioPropietarioRequestMapper.toUsuarioModel(usuarioRequestDTO);
 
         iUsuarioServicePort.createUser(usuarioModel);
         return new ResponseEntity<>(ResponseDTO.builder()
@@ -72,7 +72,5 @@ public class UsuarioPropietarioHandler implements IUsuarioPropietarioHandler {
                 .codigo(HttpStatus.OK.value())
                 .build(), HttpStatus.OK);
     }
-
-
 
 }

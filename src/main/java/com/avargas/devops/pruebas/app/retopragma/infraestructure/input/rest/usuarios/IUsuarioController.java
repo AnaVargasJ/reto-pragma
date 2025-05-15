@@ -1,13 +1,12 @@
 package com.avargas.devops.pruebas.app.retopragma.infraestructure.input.rest.usuarios;
 
 
-import com.avargas.devops.pruebas.app.retopragma.application.dto.request.UsuarioPropietarioRequestDTO;
+import com.avargas.devops.pruebas.app.retopragma.application.dto.request.UsuarioRequestDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 
 public interface IUsuarioController {
 
-    ResponseEntity<?> crearPropietario(UsuarioPropietarioRequestDTO usuarioPropietarioRequestDTO);
+    ResponseEntity<?> crearPropietario(UsuarioRequestDTO usuarioRequestDTO);
 
     ResponseEntity<?> buscarPorCorreo(String correo);
 }

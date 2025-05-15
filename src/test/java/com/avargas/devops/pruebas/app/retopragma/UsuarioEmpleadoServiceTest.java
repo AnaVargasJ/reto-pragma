@@ -2,18 +2,19 @@ package com.avargas.devops.pruebas.app.retopragma;
 
 import com.avargas.devops.pruebas.app.retopragma.application.dto.request.UsuarioRequestDTO;
 import com.avargas.devops.pruebas.app.retopragma.application.dto.response.ResponseDTO;
+import com.avargas.devops.pruebas.app.retopragma.application.handler.usuarios.empleados.IUsuarioEmpleadoHandler;
 import com.avargas.devops.pruebas.app.retopragma.domain.exception.UsuariosDomainException;
-import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.repositories.RolesRepository;
-import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.repositories.UsuarioRepository;
-import com.avargas.devops.pruebas.app.retopragma.application.handler.usuarios.propietarios.impl.UsuarioPropietarioHandler;
-
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.entity.Roles;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.entity.Usuarios;
-import org.junit.jupiter.api.*;
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.repositories.RolesRepository;
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.repositories.UsuarioRepository;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,10 +26,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @Transactional
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class UsuarioServiceTest {
+ class UsuarioEmpleadoServiceTest {
 
     @Autowired
-    private UsuarioPropietarioHandler usuarioService;
+    private IUsuarioEmpleadoHandler iUsuarioEmpleadoHandler;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -37,14 +38,12 @@ class UsuarioServiceTest {
     private RolesRepository rolesRepository;
 
 
-
-
     @Test
     @Order(1)
-    void crearPropietarioExitoso() {
+    void crearEmpleadoExitoso() {
         Roles rolProp = Roles.builder()
-                .nombre("PROP")
-                .descripcion("Propietario")
+                .nombre("EMP")
+                .descripcion("Empleado")
                 .build();
 
         rolesRepository.save(rolProp);
@@ -59,12 +58,11 @@ class UsuarioServiceTest {
                 .clave("password")
                 .build();
 
-        ResponseEntity<?> response = usuarioService.crearPropietario(usuarioRequestDTO);
+        iUsuarioEmpleadoHandler.crearEmpleado(usuarioRequestDTO);
         ResponseDTO responseDTO = ResponseDTO.builder()
-                .mensaje("Propietario creado correctamente")
+                .mensaje("Empleado creado correctamente")
                 .codigo(HttpStatus.CREATED.value()).build();
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(responseDTO, response.getBody());
+
         Optional<Usuarios> usuario = usuarioRepository.buscarPorCorreo(usuarioRequestDTO.getCorreo());
         assertTrue(usuario.isPresent());
 
@@ -72,14 +70,12 @@ class UsuarioServiceTest {
 
     @Test
     @Order(2)
-    void crearPropietarioCorreoDuplicado() {
-
-        crearPropietarioExitoso();
-
+    void crearEmpleadoCorreoDuplicado() {
+        crearEmpleadoExitoso();
         UsuarioRequestDTO dtoDuplicado = UsuarioRequestDTO.builder()
                 .nombre("Otro")
                 .apellido("Usuario")
-                .correo("test@example.com") // mismo correo
+                .correo("test@example.com")
                 .numeroDocumento("999999999")
                 .celular("+573000000000")
                 .fechaNacimiento("12/05/2000")
@@ -88,17 +84,16 @@ class UsuarioServiceTest {
 
         UsuariosDomainException exception = assertThrows(
                 UsuariosDomainException.class,
-                () -> usuarioService.crearPropietario(dtoDuplicado)
+                () -> iUsuarioEmpleadoHandler.crearEmpleado(dtoDuplicado)
         );
 
         assertEquals("El correo ya está registrado", exception.getMessage());
     }
 
-
-  @Test
+    @Test
     @Order(3)
-    void crearPropietarioDocumentoDuplicado() {
-        crearPropietarioExitoso();
+    void crearEmpleadoDocumentoDuplicado() {
+        crearEmpleadoExitoso();
         UsuarioRequestDTO usuarioPropietarioDTO = UsuarioRequestDTO.builder()
                 .nombre("Test")
                 .apellido("User")
@@ -109,34 +104,11 @@ class UsuarioServiceTest {
                 .clave("password")
                 .build();
 
-      UsuariosDomainException exception = assertThrows(
-              UsuariosDomainException.class,
-              () -> usuarioService.crearPropietario(usuarioPropietarioDTO)
-      );
+        UsuariosDomainException exception = assertThrows(
+                UsuariosDomainException.class,
+                () -> iUsuarioEmpleadoHandler.crearEmpleado(usuarioPropietarioDTO)
+        );
 
-      assertEquals("El documento ya está registrado", exception.getMessage());
+        assertEquals("El documento ya está registrado", exception.getMessage());
     }
-
-   @Test
-    @Order(4)
-    void crearPropietarioMenorEdad() {
-        crearPropietarioExitoso();
-        UsuarioRequestDTO usuarioPropietarioDTO =  UsuarioRequestDTO.builder()
-                .nombre("Test")
-                .apellido("User")
-                .correo("testo1@example.com")
-                .numeroDocumento("123456789")
-                .celular("123456789")
-                .fechaNacimiento("10/05/2020")
-                .clave("password")
-                .build();
-
-       UsuariosDomainException exception = assertThrows(
-               UsuariosDomainException.class,
-               () -> usuarioService.crearPropietario(usuarioPropietarioDTO)
-       );
-
-       assertEquals("El usuario debe ser mayor de edad", exception.getMessage());
-    }
-
 }

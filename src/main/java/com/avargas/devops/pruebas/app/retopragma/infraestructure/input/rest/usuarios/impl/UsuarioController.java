@@ -1,6 +1,6 @@
 package com.avargas.devops.pruebas.app.retopragma.infraestructure.input.rest.usuarios.impl;
 
-import com.avargas.devops.pruebas.app.retopragma.application.dto.request.UsuarioPropietarioRequestDTO;
+import com.avargas.devops.pruebas.app.retopragma.application.dto.request.UsuarioRequestDTO;
 import com.avargas.devops.pruebas.app.retopragma.application.handler.usuarios.IUsuarioPropietarioHandler;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.input.rest.usuarios.IUsuarioController;
 import io.swagger.v3.oas.annotations.Operation;
@@ -54,10 +54,10 @@ public class UsuarioController implements IUsuarioController {
             )
     })
     public ResponseEntity<?> crearPropietario(@Valid @RequestBody
-                                              @Parameter(description = "Datos de usuario", required = true, content = @Content(schema = @Schema(implementation = UsuarioPropietarioRequestDTO.class)))
-                                                  UsuarioPropietarioRequestDTO usuarioPropietarioRequestDTO) {
+                                              @Parameter(description = "Datos de usuario", required = true, content = @Content(schema = @Schema(implementation = UsuarioRequestDTO.class)))
+                                              UsuarioRequestDTO usuarioRequestDTO) {
 
-        return usuarioService.crearPropietario(usuarioPropietarioRequestDTO);
+        return usuarioService.crearPropietario(usuarioRequestDTO);
 
     }
 
@@ -71,7 +71,7 @@ public class UsuarioController implements IUsuarioController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Usuario encontrado correctamente",
-                    content = @Content(schema = @Schema(implementation = UsuarioPropietarioRequestDTO.class))
+                    content = @Content(schema = @Schema(implementation = UsuarioRequestDTO.class))
             ),
             @ApiResponse(
                     responseCode = "400",

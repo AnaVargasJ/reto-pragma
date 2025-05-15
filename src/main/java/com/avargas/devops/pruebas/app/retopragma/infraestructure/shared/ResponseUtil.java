@@ -20,4 +20,11 @@ public class ResponseUtil {
                 .codigo(codigo)
                 .build();
     }
+
+    public static ResponseDTO success(String mensaje) {
+        return ResponseDTO.builder()
+                .mensaje(mensaje)
+                .codigo(HttpStatus.CREATED.value())
+                .build();
+    }
 }
