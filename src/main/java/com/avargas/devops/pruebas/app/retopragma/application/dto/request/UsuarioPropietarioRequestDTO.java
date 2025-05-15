@@ -20,8 +20,8 @@ public class UsuarioPropietarioRequestDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
 
-    @Schema(description = "Correo electrónico",
-            example = "juan@example.com",
+    @Schema(description = "Nombre",
+            example = "juan",
             type = "string",
             requiredMode = Schema.RequiredMode.REQUIRED)
     private String nombre;
