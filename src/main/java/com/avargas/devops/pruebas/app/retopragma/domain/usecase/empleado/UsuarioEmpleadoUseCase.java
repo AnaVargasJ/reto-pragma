@@ -1,21 +1,21 @@
 package com.avargas.devops.pruebas.app.retopragma.domain.usecase.empleado;
 
-
 import com.avargas.devops.pruebas.app.retopragma.domain.api.usuarios.empleados.IUsuarioEmpleadoServicePort;
 import com.avargas.devops.pruebas.app.retopragma.domain.exception.UsuariosDomainException;
 import com.avargas.devops.pruebas.app.retopragma.domain.model.RolModel;
 import com.avargas.devops.pruebas.app.retopragma.domain.model.UsuarioModel;
+import com.avargas.devops.pruebas.app.retopragma.domain.spi.IPasswordPersistencePort;
 import com.avargas.devops.pruebas.app.retopragma.domain.spi.IUsuarioPersistencePort;
 import com.avargas.devops.pruebas.app.retopragma.domain.usecase.UsuarioValidationCase;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCrypt;
+
 
 @RequiredArgsConstructor
 public class UsuarioEmpleadoUseCase implements IUsuarioEmpleadoServicePort {
 
     private final IUsuarioPersistencePort usuarioPersistencePort;
-
     private final UsuarioValidationCase usuarioValidationCase;
+    private final IPasswordPersistencePort iPasswordPersistencePort;
 
     @Override
     public void createUserEmpleado(UsuarioModel usuarioModel) {
@@ -32,10 +32,8 @@ public class UsuarioEmpleadoUseCase implements IUsuarioEmpleadoServicePort {
             throw new UsuariosDomainException("El rol no existe");
         }
         usuarioModel.setRol(rolModel);
-        String hashPassword = BCrypt.hashpw(usuarioModel.getClave(), BCrypt.gensalt());
-        usuarioModel.setClave(hashPassword);
+        usuarioModel.setClave(iPasswordPersistencePort.encriptarClave(usuarioModel.getClave()));
         usuarioPersistencePort.saveUsuario(usuarioModel);
     }
-
 
 }

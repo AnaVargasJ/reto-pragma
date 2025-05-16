@@ -68,7 +68,7 @@ public class BeanConfiguration {
 
     @Bean
     public IUsuarioEmpleadoServicePort iUsuarioEmpleadoServicePort(){
-        return new UsuarioEmpleadoUseCase(usuarioPersistencePort(),usuarioValidationCase());
+        return new UsuarioEmpleadoUseCase(usuarioPersistencePort(),usuarioValidationCase(),iPasswordPersistencePort());
     }
 
     @Bean
