@@ -5,9 +5,10 @@ import com.avargas.devops.pruebas.app.retopragma.domain.api.usuarios.propietario
 import com.avargas.devops.pruebas.app.retopragma.domain.exception.UsuariosDomainException;
 import com.avargas.devops.pruebas.app.retopragma.domain.model.RolModel;
 import com.avargas.devops.pruebas.app.retopragma.domain.model.UsuarioModel;
+import com.avargas.devops.pruebas.app.retopragma.domain.spi.IPasswordPersistencePort;
 import com.avargas.devops.pruebas.app.retopragma.domain.spi.IUsuarioPersistencePort;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCrypt;
+
 
 @RequiredArgsConstructor
 public class UsuarioUseCase implements IUsuarioServicePort {
@@ -15,6 +16,8 @@ public class UsuarioUseCase implements IUsuarioServicePort {
     private final IUsuarioPersistencePort usuarioPersistencePort;
 
     private final UsuarioValidationCase usuarioValidationCase;
+
+    private final IPasswordPersistencePort iPasswordPersistencePort;
 
     @Override
     public void createUser(UsuarioModel usuarioModel) {
@@ -30,9 +33,8 @@ public class UsuarioUseCase implements IUsuarioServicePort {
         if (rolModel == null) {
             throw new UsuariosDomainException("El rol no existe");
         }
+        usuarioModel.setClave(iPasswordPersistencePort.encriptarClave(usuarioModel.getClave()));
         usuarioModel.setRol(rolModel);
-        String hashPassword = BCrypt.hashpw(usuarioModel.getClave(), BCrypt.gensalt());
-        usuarioModel.setClave(hashPassword);
         usuarioPersistencePort.saveUsuario(usuarioModel);
     }
 
@@ -42,9 +44,7 @@ public class UsuarioUseCase implements IUsuarioServicePort {
         if (usuario == null) {
             throw new UsuariosDomainException("Usuario no encontrado");
         }
-        if (!BCrypt.checkpw(clave, usuario.getClave())) {
-            throw new UsuariosDomainException("Clave incorrecta");
-        }
+        iPasswordPersistencePort.esClaveValida(correo, usuario.getClave());
         usuarioValidationCase.validaLoginFiels(correo, clave);
         return usuario;
     }
@@ -57,4 +57,6 @@ public class UsuarioUseCase implements IUsuarioServicePort {
         }
         return usuario;
     }
+
+
 }
