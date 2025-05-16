@@ -36,7 +36,8 @@ public class SecurityConfig {
             "/v3/api-docs/**",
             "/swagger-resources/**",
             "/webjars/**",
-            "/configuration/**"
+            "/configuration/**",
+            "/api/v1/usuarios/crearCliente"
     };
 
     @Bean
@@ -70,8 +71,4 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
-
-
-
-
 }

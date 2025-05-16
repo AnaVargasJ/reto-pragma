@@ -9,4 +9,6 @@ public interface IUsuarioController {
     ResponseEntity<?> crearPropietario(UsuarioRequestDTO usuarioRequestDTO);
 
     ResponseEntity<?> buscarPorCorreo(String correo);
+
+    ResponseEntity<?> crearCliente(UsuarioRequestDTO usuarioRequestDTO);
 }

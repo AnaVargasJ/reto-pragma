@@ -1,12 +1,13 @@
 package com.avargas.devops.pruebas.app.retopragma.infraestructure.configuration;
 
-import com.avargas.devops.pruebas.app.retopragma.domain.api.IUsuarioServicePort;
+import com.avargas.devops.pruebas.app.retopragma.domain.api.usuarios.clientes.IUsuarioClienteServicePort;
 import com.avargas.devops.pruebas.app.retopragma.domain.spi.IPasswordPersistencePort;
 import com.avargas.devops.pruebas.app.retopragma.domain.api.usuarios.empleados.IUsuarioEmpleadoServicePort;
 import com.avargas.devops.pruebas.app.retopragma.domain.api.usuarios.propietarios.IUsuarioServicePort;
 import com.avargas.devops.pruebas.app.retopragma.domain.spi.IUsuarioPersistencePort;
 import com.avargas.devops.pruebas.app.retopragma.domain.usecase.UsuarioUseCase;
 import com.avargas.devops.pruebas.app.retopragma.domain.usecase.UsuarioValidationCase;
+import com.avargas.devops.pruebas.app.retopragma.domain.usecase.clientes.UsuarioClienteUseCase;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.adapters.PasswordAdapter;
 import com.avargas.devops.pruebas.app.retopragma.domain.usecase.empleado.UsuarioEmpleadoUseCase;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.out.jpa.adapters.UsuarioJpaAdapter;
@@ -70,5 +71,8 @@ public class BeanConfiguration {
         return new UsuarioEmpleadoUseCase(usuarioPersistencePort(),usuarioValidationCase());
     }
 
-
+    @Bean
+    public IUsuarioClienteServicePort iUsuarioClienteServicePort(){
+        return new UsuarioClienteUseCase(usuarioPersistencePort(),usuarioValidationCase(),iPasswordPersistencePort());
+    }
 }
