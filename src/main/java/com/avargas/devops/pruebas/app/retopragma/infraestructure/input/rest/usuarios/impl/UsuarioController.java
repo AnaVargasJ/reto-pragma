@@ -5,7 +5,10 @@ import com.avargas.devops.pruebas.app.retopragma.application.dto.response.Respon
 import com.avargas.devops.pruebas.app.retopragma.application.handler.usuarios.IUsuarioPropietarioHandler;
 import com.avargas.devops.pruebas.app.retopragma.application.handler.usuarios.clientes.IUsuarioClienteHandler;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.input.rest.usuarios.IUsuarioController;
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.shared.EndpointApi;
 import com.avargas.devops.pruebas.app.retopragma.infraestructure.shared.ResponseUtil;
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.shared.SwaggerConstants;
+import com.avargas.devops.pruebas.app.retopragma.infraestructure.shared.SwaggerResponseCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,9 +27,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/usuarios")
+@RequestMapping(EndpointApi.BASE_PATH_USUARIOS)
 @RequiredArgsConstructor
-@Tag(name = "Propietario", description = "Aplicación que crea propietarios por medio de un administrador")
+@Tag(name = SwaggerConstants.TAG_PROPIETARIO, description = SwaggerConstants.TAG_PROPIETARIO_DESC)
 public class UsuarioController implements IUsuarioController {
 
     private final IUsuarioPropietarioHandler usuarioService;
@@ -34,30 +37,21 @@ public class UsuarioController implements IUsuarioController {
 
 
     @Override
-    @PostMapping("/crearPropietario")
+    @PostMapping(EndpointApi.CREATE_PROPIETARIO )
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Crear propietario", description = "Crea un nuevo propietario en el sistema con el rol de administrador")
+    @Operation(
+            summary = SwaggerConstants.OP_CREAR_PROPIETARIO_SUMMARY,
+            description = SwaggerConstants.OP_CREAR_PROPIETARIO_DESC
+    )
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "201",
-                    description = "Propietario creado correctamente",
-                    content = @Content(schema = @Schema(implementation = ResponseDTO.class))
-            )
-            , @ApiResponse(
-            responseCode = "400",
-            description = "Error al crear el propietario: Rol no encontrado",
-            content = @Content(schema = @Schema(implementation = ResponseDTO.class))
-    ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Token invalido",
-                    content = @Content(schema = @Schema(implementation = ResponseDTO.class))
-            ),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "Acceso denegado: No tiene permisos para realizar esta operación",
-                    content = @Content(schema = @Schema(implementation = ResponseDTO.class))
-            )
+            @ApiResponse(responseCode = SwaggerResponseCode.CREATED, description = SwaggerConstants.RESPONSE_201_DESC,
+                    content = @Content(schema = @Schema(implementation = ResponseDTO.class))),
+            @ApiResponse(responseCode = SwaggerResponseCode.BAD_REQUEST, description = SwaggerConstants.RESPONSE_400_DESC,
+                    content = @Content(schema = @Schema(implementation = ResponseDTO.class))),
+            @ApiResponse(responseCode = SwaggerResponseCode.UNAUTHORIZED, description = SwaggerConstants.RESPONSE_401_DESC,
+                    content = @Content(schema = @Schema(implementation = ResponseDTO.class))),
+            @ApiResponse(responseCode = SwaggerResponseCode.FORBIDDEN, description = SwaggerConstants.RESPONSE_403_DESC,
+                    content = @Content(schema = @Schema(implementation = ResponseDTO.class)))
     })
     public ResponseEntity<?> crearPropietario(@Valid @RequestBody
                                               @Parameter(description = "Datos de usuario", required = true, content = @Content(schema = @Schema(implementation = UsuarioRequestDTO.class)))
@@ -68,27 +62,18 @@ public class UsuarioController implements IUsuarioController {
     }
 
     @Override
-    @GetMapping("/buscarPorCorreo/{correo}")
+    @GetMapping(EndpointApi.FIND_BY_CORREO)
     @Operation(
-            summary = "Buscar usuario por correo",
-            description = "Busca un usuario en el sistema usando su correo electrónico"
+            summary = SwaggerConstants.OP_BUSCAR_POR_CORREO_SUMMARY,
+            description = SwaggerConstants.OP_BUSCAR_POR_CORREO_DESC
     )
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Usuario encontrado correctamente",
-                    content = @Content(schema = @Schema(implementation = UsuarioRequestDTO.class))
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Error de conversión de entidad a DTO",
-                    content = @Content(schema = @Schema(implementation = Map.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Usuario no encontrado",
-                    content = @Content(schema = @Schema(implementation = Map.class)) 
-            )
+            @ApiResponse(responseCode = SwaggerResponseCode.OK, description = SwaggerConstants.RESPONSE_200_DESC,
+                    content = @Content(schema = @Schema(implementation = UsuarioRequestDTO.class))),
+            @ApiResponse(responseCode = SwaggerResponseCode.BAD_REQUEST, description = "Error de conversión de entidad a DTO",
+                    content = @Content(schema = @Schema(implementation = Map.class))),
+            @ApiResponse(responseCode = SwaggerResponseCode.NOT_FOUND, description = SwaggerConstants.RESPONSE_404_DESC,
+                    content = @Content(schema = @Schema(implementation = Map.class)))
     })
     public ResponseEntity<?> buscarPorCorreo(@PathVariable("correo")
                                                  @Parameter(description = "Correo electrónico del usuario a buscar", required = true)
@@ -97,19 +82,17 @@ public class UsuarioController implements IUsuarioController {
     }
 
     @Override
-    @PostMapping("/crearCliente")
-    @Operation(summary = "Crear cuenta cliente", security = @SecurityRequirement(name = ""), description = "Crea un nuevo cliente en el sistema")
+    @PostMapping(EndpointApi.CREATE_CLIENTE)
+    @Operation(
+            summary = SwaggerConstants.OP_CREAR_CLIENTE_SUMMARY,
+            description = SwaggerConstants.OP_CREAR_CLIENTE_DESC,
+            security = @SecurityRequirement(name = "")
+    )
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "201",
-                    description = "Cliente creado correctamente",
-                    content = @Content(schema = @Schema(implementation = ResponseDTO.class))
-            )
-            , @ApiResponse(
-            responseCode = "400",
-            description = "Error al crear el cliente: Rol no encontrado",
-            content = @Content(schema = @Schema(implementation = ResponseDTO.class))
-    ),
+            @ApiResponse(responseCode = SwaggerResponseCode.CREATED, description = "Cliente creado correctamente",
+                    content = @Content(schema = @Schema(implementation = ResponseDTO.class))),
+            @ApiResponse(responseCode = SwaggerResponseCode.BAD_REQUEST, description = SwaggerConstants.RESPONSE_400_DESC,
+                    content = @Content(schema = @Schema(implementation = ResponseDTO.class)))
     })
     public ResponseEntity<?> crearCliente(@RequestBody UsuarioRequestDTO usuarioRequestDTO) {
       iUsuarioClienteHandler.crearCliente(usuarioRequestDTO);
