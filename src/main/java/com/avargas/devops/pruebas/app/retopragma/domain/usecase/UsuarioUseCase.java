@@ -1,6 +1,5 @@
 package com.avargas.devops.pruebas.app.retopragma.domain.usecase;
 
-
 import com.avargas.devops.pruebas.app.retopragma.domain.api.usuarios.propietarios.IUsuarioServicePort;
 import com.avargas.devops.pruebas.app.retopragma.domain.exception.UsuariosDomainException;
 import com.avargas.devops.pruebas.app.retopragma.domain.model.RolModel;
