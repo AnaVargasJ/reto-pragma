@@ -111,7 +111,7 @@ public class UsuarioController implements IUsuarioController {
             content = @Content(schema = @Schema(implementation = ResponseDTO.class))
     ),
     })
-    public ResponseEntity<?> crearCliente(UsuarioRequestDTO usuarioRequestDTO) {
+    public ResponseEntity<?> crearCliente(@RequestBody UsuarioRequestDTO usuarioRequestDTO) {
       iUsuarioClienteHandler.crearCliente(usuarioRequestDTO);
         return new ResponseEntity<>(ResponseUtil.success("Cliente creado correctamente"), HttpStatus.CREATED);
     }
