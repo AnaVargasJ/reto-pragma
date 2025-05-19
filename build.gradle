@@ -51,6 +51,15 @@ dependencies {
 	testImplementation 'org.mockito:mockito-junit-jupiter:5.11.0'
 }
 
+jacoco {
+	toolVersion = "0.8.11"
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+	finalizedBy jacocoTestReport
+}
+
 jacocoTestReport {
 	reports {
 		xml.required = true
@@ -58,20 +67,33 @@ jacocoTestReport {
 	}
 	afterEvaluate {
 		classDirectories.setFrom(files(classDirectories.files.collect {
-			fileTree(dir: it, exclude: [
-					'**/dto/.*',
-					'**/spi/.*',
-					'**/api/.*',
-					'**/mappers/.*',
-					'**/repository/.*',
-					'**/*.test',
-					'**/generated/.*',
+			fileTree(dir: it, include: ['**/domain/**'], exclude: [
+					'**/dto/**',
+					'**/spi/**',
+					'**/api/**',
+					'**/mappers/**',
+					'**/repository/**',
+					'**/test/**',
+					'**/generated/**'
 			])
 		}))
 	}
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-	finalizedBy jacocoTestReport
+jacocoTestCoverageVerification {
+	dependsOn test
+	violationRules {
+		rule {
+			element = 'PACKAGE'
+			includes = ['com.avargas.devops.pruebas.app.retopragma.domain.model']
+
+			limit {
+				counter = 'LINE'
+				value = 'COVEREDRATIO'
+				minimum = 0.90
+			}
+		}
+	}
 }
+
+check.dependsOn jacocoTestCoverageVerification

@@ -28,7 +28,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -88,6 +87,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             UsuarioModel user = new ObjectMapper().readValue(request.getInputStream(), UsuarioModel.class);
             return authenticateUser(user);
         } catch (IOException e) {
+                                                    //manejar en constantes
             throw new NoDataFoundException("Error al leer las credenciales del usuario", e);
         }
     }
@@ -111,6 +111,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 
         ResponseDTO respuesta = ResponseUtil.error(
+                //manejar en constantes
                 "Credenciales inválidas",
                 Map.of("error", failed.getMessage()),
                 HttpStatus.UNAUTHORIZED.value());

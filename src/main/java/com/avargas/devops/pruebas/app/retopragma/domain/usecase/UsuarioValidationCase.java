@@ -55,17 +55,16 @@ public class UsuarioValidationCase {
     }
 
     public void validaLoginFiels(String correo, String clave) {
-
         if (isNullOrEmpty(correo))
             throw new UsuariosDomainException("El correo es obligatorio");
 
         if (!isValidEmail(correo))
             throw new UsuariosDomainException("Correo no tiene una estructura válida");
+
         if (isNullOrEmpty(clave))
             throw new UsuariosDomainException("El campo clave es obligatorio");
-
-
     }
+
 
 
     private Boolean isNullOrEmpty(String str) {
