@@ -10,6 +10,7 @@ public interface EndpointApi {
     String CREATE_PROPIETARIO = "/crearPropietario";
 
     String FIND_BY_CORREO = "/buscarPorCorreo/{correo}";
+    String FIND_BY_USUARIO_ID = "/buscarPorIdUsuario/{idUsuario}";
     String CREATE_EMPLEADO = "/crearEmpleado";
 
     String CREATE_CLIENTE = "/crearCliente";

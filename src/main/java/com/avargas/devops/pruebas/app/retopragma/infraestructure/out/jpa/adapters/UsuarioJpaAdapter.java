@@ -35,6 +35,12 @@ public class UsuarioJpaAdapter implements IUsuarioPersistencePort {
     }
 
     @Override
+    public UsuarioModel buscarPorIdUsuario(Long idUsuario) {
+        Optional<Usuarios> usuariosEntity = usuarioRepository.findById(idUsuario);
+        return usuariosEntity.map(usuarioEntityMapper::toModel).orElse(null);
+    }
+
+    @Override
     public RolModel findRolByRol(String nombre) {
         Optional<Roles> rolEntity = rolesRepository.findByNombre(nombre);
         return rolEntity.map(usuarioEntityMapper::toModel).orElse(null);

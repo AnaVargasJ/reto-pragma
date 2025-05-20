@@ -6,6 +6,7 @@ public interface IUsuarioServicePort {
     UsuarioModel login(String correo, String clave);
 
     UsuarioModel getUsuarioByCorreo(String correo);
+    UsuarioModel buscarPorIdUsuario(Long idUsuario);
 
 
 }

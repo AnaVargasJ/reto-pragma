@@ -39,7 +39,10 @@ public final class SwaggerConstants {
 
     // === Operaciones - Usuario ===
     public static final String OP_BUSCAR_POR_CORREO_SUMMARY = "Buscar usuario por correo";
+    public static final String OP_BUSCAR_POR_ID_SUMMARY = "Buscar usuario por id";
     public static final String OP_BUSCAR_POR_CORREO_DESC = "Busca un usuario en el sistema usando su correo electrónico.";
+    public static final String OP_BUSCAR_POR_ID_DESC = "Busca un usuario usando el id";
+    public static final String OP_BUSCAR_POR_ID_PARAMETER = "Id del usuario a buscar";
 
     // === Descripciones de respuestas comunes ===
     public static final String RESPONSE_200_DESC = "Operación exitosa.";
