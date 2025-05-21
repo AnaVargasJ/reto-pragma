@@ -2,6 +2,7 @@ package com.avargas.devops.pruebas.app.retopragma.domain.usecase;
 
 import com.avargas.devops.pruebas.app.retopragma.domain.api.usuarios.propietarios.IUsuarioServicePort;
 import com.avargas.devops.pruebas.app.retopragma.domain.exception.UsuariosDomainException;
+import com.avargas.devops.pruebas.app.retopragma.domain.exception.UsuariosException;
 import com.avargas.devops.pruebas.app.retopragma.domain.model.RolModel;
 import com.avargas.devops.pruebas.app.retopragma.domain.model.UsuarioModel;
 import com.avargas.devops.pruebas.app.retopragma.domain.spi.IPasswordPersistencePort;
@@ -41,7 +42,7 @@ public class UsuarioUseCase implements IUsuarioServicePort {
     public UsuarioModel login(String correo, String clave) {
         UsuarioModel usuario = usuarioPersistencePort.getUsuarioByCorreo(correo);
         if (usuario == null) {
-            throw new UsuariosDomainException("Usuario no encontrado");
+            throw new UsuariosDomainException(UsuariosException.NO_DATA_FOUND.getMessage());
         }
         iPasswordPersistencePort.esClaveValida(correo, usuario.getClave());
         usuarioValidationCase.validaLoginFiels(correo, clave);
@@ -52,7 +53,16 @@ public class UsuarioUseCase implements IUsuarioServicePort {
     public UsuarioModel getUsuarioByCorreo(String correo) {
         UsuarioModel usuario = usuarioPersistencePort.getUsuarioByCorreo(correo);
         if (usuario == null) {
-            throw new UsuariosDomainException("Usuario no encontrado");
+            throw new UsuariosDomainException(UsuariosException.NO_DATA_FOUND.getMessage());
+        }
+        return usuario;
+    }
+
+    @Override
+    public UsuarioModel buscarPorIdUsuario(Long idUsuario) {
+        UsuarioModel usuario = usuarioPersistencePort.buscarPorIdUsuario(idUsuario);
+        if (usuario == null) {
+            throw new UsuariosDomainException(UsuariosException.NO_DATA_FOUND.getMessage());
         }
         return usuario;
     }

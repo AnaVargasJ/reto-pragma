@@ -20,8 +20,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -140,29 +139,43 @@ class UsuarioUseCaseTest {
     @Test
     @Order(11)
     void login_correoNulo_lanzaExcepcion() {
-        when(usuarioPersistencePort.getUsuarioByCorreo(null)).thenReturn(null);
         assertThrows(UsuariosDomainException.class,
-                () -> usuarioValidationCase.validaLoginFiels(null, "clave123"));
+                () -> usuarioUseCase.login(null, "clave123"));
     }
+
 
 
     @Test
     @Order(12)
     void login_correoInvalido_lanzaExcepcion() {
-        assertThrows(UsuariosDomainException.class, () -> usuarioValidationCase.validaLoginFiels("correo-no", "clave123"));
+        assertThrows(UsuariosDomainException.class, () -> usuarioUseCase.login("correo-no", "clave123"));
     }
 
     @Test
     @Order(13)
     void login_claveNula_lanzaExcepcion() {
-        assertThrows(UsuariosDomainException.class, () -> usuarioValidationCase.validaLoginFiels("correo@ok.com", null));
+        assertThrows(UsuariosDomainException.class, () -> usuarioUseCase.login("correo@ok.com", null));
     }
 
     @Test
     @Order(14)
     void login_datosValidos_noLanzaExcepcion() {
-        assertDoesNotThrow(() -> usuarioValidationCase.validaLoginFiels("correo@ok.com", "clave123"));
+        UsuarioModel usuario = UsuarioModel.builder()
+                .correo("correo@ok.com")
+                .clave("clave123")
+                .build();
+
+        when(usuarioPersistencePort.getUsuarioByCorreo("correo@ok.com")).thenReturn(usuario);
+
+
+        when(passwordPersistencePort.esClaveValida("correo@ok.com", "clave123")).thenReturn(true);
+
+
+
+
+        assertDoesNotThrow(() -> usuarioUseCase.login("correo@ok.com", "clave123"));
     }
+
 
     @Test
     @Order(15)
@@ -176,5 +189,55 @@ class UsuarioUseCaseTest {
         assertDoesNotThrow(() -> usuarioUseCase.createUser(usuario));
         verify(usuarioPersistencePort).saveUsuario(any());
     }
+
+    @Test
+    @Order(16)
+    void getUsuarioByCorreo_usuarioExiste_retornaUsuario() {
+        UsuarioModel mockUsuario = UsuarioModel.builder()
+                .correo("correo@ok.com")
+                .build();
+
+        when(usuarioPersistencePort.getUsuarioByCorreo("correo@ok.com")).thenReturn(mockUsuario);
+
+        UsuarioModel resultado = usuarioUseCase.getUsuarioByCorreo("correo@ok.com");
+
+        assertEquals("correo@ok.com", resultado.getCorreo());
+        verify(usuarioPersistencePort).getUsuarioByCorreo("correo@ok.com");
+    }
+
+    @Test
+    @Order(17)
+    void getUsuarioByCorreo_usuarioNoExiste_lanzaExcepcion() {
+        when(usuarioPersistencePort.getUsuarioByCorreo("noexiste@ok.com")).thenReturn(null);
+
+        assertThrows(UsuariosDomainException.class,
+                () -> usuarioUseCase.getUsuarioByCorreo("noexiste@ok.com"));
+    }
+
+    @Test
+    @Order(18)
+    void buscarPorIdUsuario_usuarioExiste_retornaUsuario() {
+        UsuarioModel mockUsuario = UsuarioModel.builder()
+                .correo("correo@ok.com")
+                .build();
+
+        when(usuarioPersistencePort.buscarPorIdUsuario(1L)).thenReturn(mockUsuario);
+
+        UsuarioModel resultado = usuarioUseCase.buscarPorIdUsuario(1L);
+
+        assertEquals("correo@ok.com", resultado.getCorreo());
+        verify(usuarioPersistencePort).buscarPorIdUsuario(1L);
+    }
+
+    @Test
+    @Order(19)
+    void buscarPorIdUsuario_usuarioNoExiste_lanzaExcepcion() {
+        when(usuarioPersistencePort.buscarPorIdUsuario(99L)).thenReturn(null);
+
+        assertThrows(UsuariosDomainException.class,
+                () -> usuarioUseCase.buscarPorIdUsuario(99L));
+    }
+
+
 }
 

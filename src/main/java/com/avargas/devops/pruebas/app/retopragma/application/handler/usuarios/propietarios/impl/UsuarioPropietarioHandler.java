@@ -73,4 +73,11 @@ public class UsuarioPropietarioHandler implements IUsuarioPropietarioHandler {
                 .build(), HttpStatus.OK);
     }
 
+    @Override
+    public UsuarioDTOResponse buscarPorIdUsuario(Long idUsuario) {
+        UsuarioModel usuarioModel = iUsuarioServicePort.buscarPorIdUsuario(idUsuario);
+        UsuarioDTOResponse response = usuarioResponseMapper.toUsuarioDTO(usuarioModel);
+        return  response;
+    }
+
 }

@@ -37,7 +37,7 @@ public class UsuarioController implements IUsuarioController {
 
 
     @Override
-    @PostMapping(EndpointApi.CREATE_PROPIETARIO )
+    @PostMapping(EndpointApi.CREATE_PROPIETARIO)
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(
             summary = SwaggerConstants.OP_CREAR_PROPIETARIO_SUMMARY,
@@ -76,9 +76,32 @@ public class UsuarioController implements IUsuarioController {
                     content = @Content(schema = @Schema(implementation = Map.class)))
     })
     public ResponseEntity<?> buscarPorCorreo(@PathVariable("correo")
-                                                 @Parameter(description = "Correo electrónico del usuario a buscar", required = true)
+                                             @Parameter(description = "Correo electrónico del usuario a buscar", required = true)
                                              String correo) {
         return usuarioService.buscarPorCorreo(correo);
+    }
+
+
+    @Override
+    @GetMapping(EndpointApi.FIND_BY_USUARIO_ID)
+    @Operation(
+            summary = SwaggerConstants.OP_BUSCAR_POR_ID_SUMMARY,
+            description = SwaggerConstants.OP_BUSCAR_POR_ID_DESC
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = SwaggerResponseCode.OK, description = SwaggerConstants.RESPONSE_200_DESC,
+                    content = @Content(schema = @Schema(implementation = ResponseDTO.class))),
+            @ApiResponse(responseCode = SwaggerResponseCode.BAD_REQUEST, description = "Error de conversión de entidad a DTO",
+                    content = @Content(schema = @Schema(implementation = ResponseDTO.class))),
+            @ApiResponse(responseCode = SwaggerResponseCode.NOT_FOUND, description = SwaggerConstants.RESPONSE_404_DESC,
+                    content = @Content(schema = @Schema(implementation = ResponseDTO.class)))
+    })
+    public ResponseEntity<?> buscarPorIdUsuario(@PathVariable("idUsuario")
+                                                @Parameter(description = SwaggerConstants.OP_BUSCAR_POR_ID_PARAMETER  , required = true)
+                                                Long idUsuario) {
+        return new ResponseEntity<>(ResponseUtil.error(SwaggerResponseCode.MESSAGE_SUCCES + idUsuario,
+                usuarioService.buscarPorIdUsuario(idUsuario),HttpStatus.OK.value()) ,
+                HttpStatus.OK);
     }
 
     @Override
@@ -95,7 +118,7 @@ public class UsuarioController implements IUsuarioController {
                     content = @Content(schema = @Schema(implementation = ResponseDTO.class)))
     })
     public ResponseEntity<?> crearCliente(@RequestBody UsuarioRequestDTO usuarioRequestDTO) {
-      iUsuarioClienteHandler.crearCliente(usuarioRequestDTO);
+        iUsuarioClienteHandler.crearCliente(usuarioRequestDTO);
         return new ResponseEntity<>(ResponseUtil.success("Cliente creado correctamente"), HttpStatus.CREATED);
     }
 
